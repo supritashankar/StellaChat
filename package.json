@@ -4,6 +4,7 @@
   "description": "\"Awesome chat application built using the MEAN stack\"",
   "main": "index.js",
   "scripts": {
+    "start": "npm start",
     "test": "npm run test"
   },
   "repository": {
@@ -18,6 +19,49 @@
   ],
   "author": "Suprita Shankar <supshankar@paypal.com>",
   "license": "MIT",
+  "dependencies": {
+    "angular": "^1.5.5",
+    "angular-bootstrap": "^0.12.2",
+    "angular-cookies": "^1.5.2",
+    "angular-jwt": "latest",
+    "angular-resource": "^1.5.2",
+    "angular-route": "^1.5.2",
+    "angular-sanitize": "^1.5.2",
+    "angular-ui-router": "0.3.1",
+    "angular-ui-select": "^0.12.100",
+    "body-parser": "latest",
+    "bootstrap": "latest",
+    "compression": "latest",
+    "connect-flash": "latest",
+    "connect-modrewrite": "latest",
+    "consolidate": "latest",
+    "express": "^4.14.0",
+    "helmet": "^2.1.1",
+    "lodash": "latest",
+    "morgan": "latest",
+    "q": "latest",
+    "request": "latest"
+  },
+  "devDependencies": {
+    "babel-core": "^6.7.2",
+    "babel-loader": "^6.2.4",
+    "babel-preset-es2015": "^6.6.0",
+    "babel-preset-stage-1": "^6.5.0",
+    "css-loader": "^0.24.0",
+    "del": "latest",
+    "expect.js": "latest",
+    "file-loader": "^0.8.5",
+    "jquery": "latest",
+    "jshint": "latest",
+    "jshint-stylish": "latest",
+    "jsonwebtoken": "latest",
+    "require-dir": "latest",
+    "requirejs": "latest",
+    "style-loader": "^0.13.1",
+    "url-loader": "^0.5.7",
+    "webpack": "^1.12.14",
+    "webpack-dev-server": "^1.14.1"
+  },
   "bugs": {
     "url": "https://github.com/supritashankar/StellaChat/issues"
   },
