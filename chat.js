@@ -11,12 +11,13 @@ const server = net.createServer((socket) => {
 
   socket.on('data', function(data){
     sockets.forEach(function(s){
+      if (s == socket) return;
       s.write(data);
     })
   });
   socket.on('end', (deadsocket) => {
-    console.log('client disconnected');
-    let index = sockets.index(deadsocket);
+    console.log('person left the room');
+    let index = sockets.indexOf(deadsocket);
     sockets.splice(index, 1);
   });
 });
