@@ -1,0 +1,25 @@
+{
+  "name": "stellachat",
+  "version": "1.0.0",
+  "description": "\"Awesome chat application built using the MEAN stack\"",
+  "main": "index.js",
+  "scripts": {
+    "test": "npm run test"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/supritashankar/StellaChat.git"
+  },
+  "keywords": [
+    "Angular",
+    "NodeJS",
+    "Express",
+    "MongoDB"
+  ],
+  "author": "Suprita Shankar <supshankar@paypal.com>",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/supritashankar/StellaChat/issues"
+  },
+  "homepage": "https://github.com/supritashankar/StellaChat#readme"
+}
