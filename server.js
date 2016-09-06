@@ -55,4 +55,9 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
     res.sendfile(__dirname + '/app/index.html');
   });
 
+  app.get('/messages', function(req, res){
+    res.setHeader('Content-Type', 'application/json');
+    res.send(JSON.stringify([{ id: 1, content: "Hey!"},{ id: 2, content: "Hello!"} ]));
+  })
+
 });
