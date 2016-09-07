@@ -8,7 +8,7 @@ let sockets = []
 const app = express();
 app.use(express.static(__dirname + "/app"));
 
-mongoose.connect('mongodb://localhost/test');
+mongoose.connect(process.env.MONGODB_URI || 'mongodb://localhost/test');
 const db = mongoose.connection;
 
 const userSchema = mongoose.Schema({
