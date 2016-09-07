@@ -3,9 +3,7 @@
 const net = require('net');
 var express = require("express");
 var bodyParser = require("body-parser");
-var mongodb = require("mongodb");
-var User = require('./models').user;
-var Message = require('./models').message;
+var mongoose = require('mongoose');
 var Promise = require('es6-promise').Promise;
 let sockets = []
 
@@ -13,16 +11,27 @@ var app = express();
 app.use(express.static(__dirname + "/app"));
 app.use(bodyParser.json());
 
-process.env.MONGODB_URI = 'mongodb://localhost/stellachat';
-mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
-  if (err) {
-    console.log(err);
-    process.exit(1);
-  }
+mongoose.connect('mongodb://localhost/test');
+var db = mongoose.connection;
+db.once('open', function () {
+  console.log('DB open!');
+  var userSchema = mongoose.Schema({
+    name: String
+  });
+  var msgSchema = mongoose.Schema({
+    msg: {
+      type: String,
+      default: ''
+    },
+    user: {
+  		type: mongoose.Schema.ObjectId,
+  		ref: 'StellaUser'
+  	}
+  });
+  var User = mongoose.model('StellaUser', userSchema);
+  var Message = mongoose.model('StellaMessage', msgSchema);
 
-  // Save database object from the callback for reuse.
-  var db = database;
-  console.log("Database connection ready");
+
   const server = net.createServer((socket) => {
     // 'connection' listener
     socket.identity = socket.remoteAddress + ":" + socket.remotePort
@@ -65,16 +74,25 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   })
 
   app.post('/messages', function(req, res){
-    User.findOne({username: req.body.data.user}, function(err,obj) {
+
+    User.findOne({name: req.body.data.user}, function(err,obj) {
       if(err) { console.log(err); }
-      console.log(obj);
+      if (obj == null){
+        var newuser = new User({ name: req.body.data.user });
+        newuser.save(function (err, user) {
+          if (err) return console.error(err);
+        });
+      }
     });
+
     var newMessage = Message({
       msg: req.body.data.content
     });
-    var promise = newMessage.save();
-    promise.then(function(doc){
-      res.send({'status':'success'});
-    })
+    newMessage.user = user.id;
+    newMessage.save(function (err, fluffy) {
+      if (err) return console.error(err);
+      console.log('ok msg!!');
+    });
+    res.send({'status':'success'});
   });
 });
