@@ -8,16 +8,17 @@ angular.
       function MessageListController(Message) {
         this.messages = Message.query();
         this.showlogin = true;
-
+        this.user = null;
         var ctrl = this;
         ctrl.login = function(user){
-          console.log(user);
+          this.user = user;
           this.showlogin = false;
         }
 
         ctrl.sendmessage = function(data){
-          ctrl.newmessage = new Message(data)
-          ctrl.newmessage.$save(function(){
+          ctrl.newmessage = new Message({'data':data, 'user':this.user})
+          ctrl.newmessage.$save(function(result){
+            console.log(result);
             console.log('success message creation');
           })
         }

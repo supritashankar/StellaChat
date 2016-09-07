@@ -6,7 +6,7 @@ var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
 var User = require('./models').user;
 var Message = require('./models').message;
-var ObjectID = mongodb.ObjectID;
+var Promise = require('es6-promise').Promise;
 let sockets = []
 
 var app = express();
@@ -59,30 +59,22 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   });
 
   app.get('/messages', function(req, res){
-    var newUser = User({
-      username: 'supshankar1',
-    });
-    console.log(newUser);
-    newUser.save(function(err) {
-      if (err) throw err;
 
-      console.log('User created!');
-    });
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify([{ id: 1, content: "Hey!"},{ id: 2, content: "Hello!"} ]));
   })
 
   app.post('/messages', function(req, res){
-    console.log('inside', req.body);
-    var newMesage = Message({
-      content: req.body.content,
+    User.findOne({username: req.body.data.user}, function(err,obj) {
+      if(err) { console.log(err); }
+      console.log(obj);
     });
-    newMesage.save(function(err) {
-      if (err) throw err;
-      console.log('party!');
-      res.send(JSON.stringify({'message':'success'}));
+    var newMessage = Message({
+      msg: req.body.data.content
     });
-    res.send(JSON.stringify({'message':'success'}));
+    var promise = newMessage.save();
+    promise.then(function(doc){
+      res.send({'status':'success'});
+    })
   });
-
 });
