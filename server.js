@@ -13,23 +13,27 @@ app.use(bodyParser.json());
 
 mongoose.connect('mongodb://localhost/test');
 var db = mongoose.connection;
+
+var userSchema = mongoose.Schema({
+  name: String
+});
+var msgSchema = mongoose.Schema({
+  msg: {
+    type: String,
+    default: ''
+  },
+  user: {
+    type: mongoose.Schema.ObjectId,
+    ref: 'StellaUser'
+  }
+});
+var User = mongoose.model('StellaUser', userSchema);
+var Message = mongoose.model('StellaMessage', msgSchema);
+
+
 db.once('open', function () {
   console.log('DB open!');
-  var userSchema = mongoose.Schema({
-    name: String
-  });
-  var msgSchema = mongoose.Schema({
-    msg: {
-      type: String,
-      default: ''
-    },
-    user: {
-  		type: mongoose.Schema.ObjectId,
-  		ref: 'StellaUser'
-  	}
-  });
-  var User = mongoose.model('StellaUser', userSchema);
-  var Message = mongoose.model('StellaMessage', msgSchema);
+
 
 
   const server = net.createServer((socket) => {
@@ -63,36 +67,47 @@ db.once('open', function () {
     console.log("App now running on port 8080");
   });
 
+  function getUsersById(name, callback) {
+    User.findOne({name: name}, function(err, obj) {
+      if(err) { return callback(err, null); }
+      if (obj == null){
+        var newuser = new User({ name: name });
+        newuser.save(function (err, user) {
+          if (err) return callback(err, null);
+          return callback(null, newuser);
+        });
+      }
+      else {
+        return callback(null, obj)
+      }
+    });
+  }
+
   app.get('/', function (req, res) {
     res.sendfile(__dirname + '/app/index.html');
   });
 
   app.get('/messages', function(req, res){
-
-    res.setHeader('Content-Type', 'application/json');
-    res.send(JSON.stringify([{ id: 1, content: "Hey!"},{ id: 2, content: "Hello!"} ]));
+    Message.find(function (err, messages) {
+      if (err) return console.error(err);
+      res.setHeader('Content-Type', 'application/json');
+      res.send(JSON.stringify(messages));
+    }).limit(4);
   })
 
   app.post('/messages', function(req, res){
 
-    User.findOne({name: req.body.data.user}, function(err,obj) {
-      if(err) { console.log(err); }
-      if (obj == null){
-        var newuser = new User({ name: req.body.data.user });
-        newuser.save(function (err, user) {
+    getUsersById(req.body.data.user, function(err, user){
+      if (err == null){
+        var newMessage = Message({
+          msg: req.body.data.content,
+          user: user.id
+        });
+        newMessage.save(function (err, fluffy) {
           if (err) return console.error(err);
+          res.send({'status':'success'});
         });
       }
     });
-
-    var newMessage = Message({
-      msg: req.body.data.content
-    });
-    newMessage.user = user.id;
-    newMessage.save(function (err, fluffy) {
-      if (err) return console.error(err);
-      console.log('ok msg!!');
-    });
-    res.send({'status':'success'});
   });
 });
