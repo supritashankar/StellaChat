@@ -1,10 +1,9 @@
 'use strict'
 
 const net = require('net');
-var express = require("express");
-var bodyParser = require("body-parser");
-var mongoose = require('mongoose');
-var Promise = require('es6-promise').Promise;
+const express = require("express");
+const bodyParser = require("body-parser");
+const mongoose = require('mongoose');
 let sockets = []
 
 var app = express();
