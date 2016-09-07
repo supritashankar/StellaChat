@@ -20,7 +20,8 @@ angular.
           ctrl.newmessage.$save(function(result){
             console.log(result);
             console.log('success message creation');
-          })
+          });
+          this.messages = Message.query();
         }
       }
     ]

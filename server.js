@@ -24,9 +24,11 @@ var msgSchema = mongoose.Schema({
   },
   user: {
     type: mongoose.Schema.ObjectId,
-    ref: 'StellaUser'
+    ref: 'StellaUser',
+    required: true
   }
-});
+},
+{ timestamps: true });
 var User = mongoose.model('StellaUser', userSchema);
 var Message = mongoose.model('StellaMessage', msgSchema);
 
@@ -88,11 +90,11 @@ db.once('open', function () {
   });
 
   app.get('/messages', function(req, res){
-    Message.find(function (err, messages) {
+    Message.find({}, {}, { sort: { 'createdAt' : -1 } }, function (err, messages) {
       if (err) return console.error(err);
       res.setHeader('Content-Type', 'application/json');
       res.send(JSON.stringify(messages));
-    }).limit(4);
+    }).limit(6);
   })
 
   app.post('/messages', function(req, res){
