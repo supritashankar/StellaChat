@@ -18,7 +18,6 @@ angular.
         ctrl.sendmessage = function(data){
           ctrl.newmessage = new Message({'data':data, 'user':this.user})
           ctrl.newmessage.$save(function(result){
-            console.log(result);
             console.log('success message creation');
           });
           this.messages = Message.query();

@@ -97,8 +97,7 @@ db.once('open', function () {
   })
 
   app.post('/messages', function(req, res){
-
-    getUsersById(req.body.data.user, function(err, user){
+    getUsersById(req.body.user.name, function(err, user){
       if (err == null){
         var newMessage = Message({
           msg: req.body.data.content,
