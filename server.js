@@ -4,6 +4,8 @@ const net = require('net');
 var express = require("express");
 var bodyParser = require("body-parser");
 var mongodb = require("mongodb");
+var User = require('./models').user;
+var Message = require('./models').message;
 var ObjectID = mongodb.ObjectID;
 let sockets = []
 
@@ -40,6 +42,7 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
     //   let index = sockets.indexOf(deadsocket);
     //   sockets.splice(index, 1);
     // });
+
   });
   server.on('error', (err) => {
     throw err;
@@ -56,8 +59,30 @@ mongodb.MongoClient.connect(process.env.MONGODB_URI, function (err, database) {
   });
 
   app.get('/messages', function(req, res){
+    var newUser = User({
+      username: 'supshankar1',
+    });
+    console.log(newUser);
+    newUser.save(function(err) {
+      if (err) throw err;
+
+      console.log('User created!');
+    });
     res.setHeader('Content-Type', 'application/json');
     res.send(JSON.stringify([{ id: 1, content: "Hey!"},{ id: 2, content: "Hello!"} ]));
   })
+
+  app.post('/messages', function(req, res){
+    console.log('inside', req.body);
+    var newMesage = Message({
+      content: req.body.content,
+    });
+    newMesage.save(function(err) {
+      if (err) throw err;
+      console.log('party!');
+      res.send(JSON.stringify({'message':'success'}));
+    });
+    res.send(JSON.stringify({'message':'success'}));
+  });
 
 });

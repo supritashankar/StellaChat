@@ -17,6 +17,6 @@ let MsgSchema = new Schema({
 	}
 });
 
-
-mongoose.model(UserSchema);
-mongoose.model(MsgSchema);
+var User = mongoose.model('User', UserSchema);
+var Message = mongoose.model('Message', MsgSchema);
+module.exports = { 'user': User, 'message': Message}
